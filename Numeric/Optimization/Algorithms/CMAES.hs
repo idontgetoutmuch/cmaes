@@ -1,4 +1,5 @@
-{-# LANGUAGE PackageImports, RankNTypes, RecordWildCards,ScopedTypeVariables #-}
+{-# LANGUAGE PackageImports, RankNTypes, RecordWildCards,
+             ScopedTypeVariables, FlexibleContexts #-}
 {-# OPTIONS -Wall #-}
 
 
@@ -360,9 +361,11 @@ zipTWith :: (Traversable t1, Traversable t2) => (a->b->c) -> (t1 a) -> (t2 b) ->
 zipTWith op xs0 ys0 = State.evalState (mapM zipper xs0) (toList ys0)
   where
     zipper x = do
-      (y:ys) <- State.get
-      State.put ys
-      return (op x y)
+      zs <- State.get
+      case zs of
+        []   -> error "zipTWith: empty state"
+        y:ys -> do State.put ys
+                   return (op x y)
 
 {-|
 
