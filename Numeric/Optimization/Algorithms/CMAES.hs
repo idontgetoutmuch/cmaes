@@ -49,7 +49,7 @@ Use `minimizeT` to optimize functions on traversable structures.
 >>> let f4 = V.sum . V.imap (\i x -> (x*abs x - fromIntegral i)**2)
 
 >>> :t f4
-f4 :: V.Vector Double -> Double
+f4 :: Floating c => V.Vector c -> c
 >>> bestVx <- run $ minimizeT f4 $ V.replicate 10 0
 >>> assert $ f4 bestVx < 1e-10
 
@@ -86,7 +86,7 @@ increase `noiseReEvals`) for better results.
 >>> let f6Pure = sum . zipWith (\i x -> (x*abs x - i)**2) [0..]
 >>> let f6 xs = fmap (f6Pure xs +) noise
 >>> :t f6
-f6 :: [Double] -> IO Double
+f6 :: (Floating b, Enum b, Random b) => [b] -> IO b
 >>> xs60 <- run $ (minimizeIO f6 $ replicate 10 0) {noiseHandling = False}
 >>> xs61 <- run $ (minimizeIO f6 $ replicate 10 0) {noiseHandling = True,noiseReEvals=Just 10}
 >>> -- assert $ f6Pure xs61 < f6Pure xs60
