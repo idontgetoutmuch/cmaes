@@ -111,7 +111,7 @@ module Numeric.Optimization.Algorithms.CMAES (
 )where
 
 
-import           Control.Applicative ((<|>), (<$>))
+import           Control.Applicative ((<|>))
 import           Control.Monad hiding (forM_, mapM)
 import qualified "mtl" Control.Monad.State as State
 import           Data.Data
