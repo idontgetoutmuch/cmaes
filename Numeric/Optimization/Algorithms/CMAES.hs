@@ -259,7 +259,7 @@ minimizeGIO fIO initA =
 
 
 
--- | Silently check for python version and place the correct shebang 
+-- | Silently check for python version and place the correct shebang
 wrapperFnFullPath :: FilePath
 wrapperFnFullPath = unsafePerformIO $ do
   fullFn <- getDataFileName wrapperFn
@@ -267,14 +267,14 @@ wrapperFnFullPath = unsafePerformIO $ do
   str <- hGetContents hin
   _ <- waitForProcess hproc
   let pythonVersion :: Int
-      pythonVersion = read $ take 1 $ atDef "2" (words str) 1 
-  
+      pythonVersion = read $ take 1 $ atDef "2" (words str) 1
+
       correctShebang
         | pythonVersion == 2 = "#!/usr/bin/env python"
         | otherwise          = "#!/usr/bin/env python2"
 
   wrapperLines <- lines <$> Strict.readFile fullFn
-    
+
   when (headDef "" wrapperLines /= correctShebang) $ do
     writeFile fullFn $ unlines $ correctShebang : drop 1 wrapperLines
 
@@ -302,17 +302,17 @@ run Config{..} = do
     sendLine hin key
     sendLine hin val
   let loop = do
-      str <- recvLine hout
-      let ws = words str
-      case ws!!0 of
-        "a" -> do
-          return $ embedding $ map read $ drop 1 ws
-        "q" -> do
-          ans <- funcIO . embedding $ map read $ drop 1 ws
-          sendLine hin $ show ans
-          loop
-        _ -> do
-          fail "ohmy god"
+        str <- recvLine hout
+        let ws = words str
+        case ws!!0 of
+          "a" -> do
+            return $ embedding $ map read $ drop 1 ws
+          "q" -> do
+            ans <- funcIO . embedding $ map read $ drop 1 ws
+            sendLine hin $ show ans
+            loop
+          _ -> do
+            fail "ohmy god"
   r <- loop
   _ <- waitForProcess hproc
   return r
