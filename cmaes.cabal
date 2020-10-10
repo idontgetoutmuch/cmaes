@@ -45,10 +45,10 @@ Test-Suite test
   Type:              exitcode-stdio-1.0
   Build-Depends:     base == 4.*
                    , cmaes
-                   , doctest >=0.8
-                   , doctest-prop >=0.2
+                   , doctest >=0.15 && <0.18
                    , mtl  
                    , process
+                   , QuickCheck
                    , random
                    , syb
                    , vector

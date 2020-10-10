@@ -15,11 +15,11 @@ Usage:
 Let's optimize the following function /f(xs)/. @xs@ is a list of
 Double and @f@ has its minimum at @xs !! i = sqrt(i)@.
 
->>> import Test.DocTest.Prop
 >>> let f = sum . zipWith (\i x -> (x*abs x - i)**2) [0..] :: [Double] -> Double
 >>> let initXs = replicate 10 0                            :: [Double]
 >>> bestXs <- run $ minimize f initXs
->>> assert $ f bestXs < 1e-10
+>>> f bestXs < 1e-10
+True
 
 If your optimization is not working well, try:
 
@@ -33,7 +33,8 @@ An example for scaling the function value:
 
 >>> let f2 xs = (/1e100) $ sum $ zipWith (\i x -> (x*abs x - i)**2) [0..] xs
 >>> bestXs <- run $ (minimize f2 $ replicate 10 0) {tolFun = Just 1e-111}
->>> assert $ f2 bestXs < 1e-110
+>>> f2 bestXs < 1e-110
+True
 
 An example for scaling the input values:
 
@@ -41,7 +42,8 @@ An example for scaling the input values:
 >>> let xs30 = replicate 10 0 :: [Double]
 >>> let m3 = (minimize f3 xs30) {scaling = Just (repeat 1e50)}
 >>> xs31 <- run $ m3
->>> assert $ f3 xs31 / f3 xs30 < 1e-10
+>>> f3 xs31 / f3 xs30 < 1e-10
+True
 
 Use `minimizeT` to optimize functions on traversable structures.
 
@@ -51,7 +53,8 @@ Use `minimizeT` to optimize functions on traversable structures.
 >>> :t f4
 f4 :: Floating c => V.Vector c -> c
 >>> bestVx <- run $ minimizeT f4 $ V.replicate 10 0
->>> assert $ f4 bestVx < 1e-10
+>>> f4 bestVx < 1e-10
+True
 
 Or use `minimizeG` to optimize functions of any type that is Data
 and that contains `Double`s. Here is an example that deal with
@@ -70,12 +73,14 @@ Let us create a triangle ABC so that AB = 3, AC = 4, BC = 5.
 >>> :t f5
 f5 :: Triangle -> Double
 >>> bestTriangle <- run $ (minimizeG f5 triangle0){tolFun = Just 1e-20}
->>> assert $ f5 bestTriangle < 1e-10
+>>> f5 bestTriangle < 1e-10
+True
 
 Then the angle BAC should be orthogonal.
 
 >>> let (Triangle (Pt ax ay) (Pt bx by) (Pt cx cy)) = bestTriangle
->>> assert $ abs ((bx-ax)*(cx-ax) + (by-ay)*(cy-ay)) < 1e-10
+>>> abs ((bx-ax)*(cx-ax) + (by-ay)*(cy-ay)) < 1e-10
+True
 
 
 When optimizing noisy functions, set `noiseHandling` = @True@ (and
@@ -386,14 +391,11 @@ of generic data types. Let's test them.
 
 Putting back the obtained values should not change the data.
 
->>> import Test.DocTest.Prop
->>> type Complicated = ([[Double]],(),(([(Double,String)]),[Double]))
->>> prop ((\x -> putDoubles (getDoubles x) x == x) :: Complicated -> Bool)
+prop> ((\x -> putDoubles (getDoubles x) x == x) :: ([[Double]],(),(([(Double,String)]),[Double])) -> Bool)
 
 You can get the original list back after putting it.
 
->>> let make3 xs = take 3 $ xs ++ [0..]
->>> prop ((\xs' y -> let xs = make3 xs' in getDoubles (putDoubles xs y)==xs) :: [Double] -> (Double,Double,Double) -> Bool)
+prop> ((\(xs', y) -> let xs = take 3 (xs' ++ [0..]) in getDoubles (putDoubles xs y)==xs) :: ([Double], (Double,Double,Double)) -> Bool)
 
 
 

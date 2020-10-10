@@ -1,4 +1,4 @@
-{ mkDerivation, base, doctest, doctest-prop, mtl, process, python, random
+{ mkDerivation, base, doctest, doctest-prop, mtl, process, QuickCheck, python, random
 , safe, stdenv, strict, syb, vector
 }:
 mkDerivation {
@@ -8,7 +8,7 @@ mkDerivation {
   enableSeparateDataOutput = true;
   libraryHaskellDepends = [ base mtl process safe strict syb ];
   testHaskellDepends = [
-    base doctest doctest-prop mtl process random syb vector
+    base doctest mtl process QuickCheck random syb vector
   ];
   executableHaskellDepends = [ python ];
   description = "CMA-ES wrapper in Haskell";
