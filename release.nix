@@ -8,22 +8,9 @@ nixpkgs = fetchTarball {
   sha256 = nixpkgsSha256;
 };
 
-myHaskellPackageOverlay = self: super: {
-  myHaskellPackages = super.haskellPackages.override {
-    overrides = hself: hsuper: rec {
-
-      doctest-prop = hself.callCabal2nix "doctest-prop" (builtins.fetchGit {
-        url = "file:///Users/dom/doctest-prop";
-        rev = "a6afb6dc8a8fe734e25990face413fe144b998c1";
-      }) { };
-
-    };
-  };
-};
-
 in
 
-{ pkgs ? import nixpkgs { overlays = [ myHaskellPackageOverlay ]; } }:
+{ pkgs ? import nixpkgs { overlays = [ ]; } }:
 
 let
 
@@ -35,4 +22,4 @@ python-with-my-packages = pkgs.python2.withPackages my-python-packages;
 
 in
 
-pkgs.myHaskellPackages.callPackage ./default.nix { python = python-with-my-packages; }
+pkgs.haskellPackages.callPackage ./default.nix { python = python-with-my-packages; }
