@@ -18,7 +18,7 @@ my-python-packages = python-packages: with python-packages; [
   numpy
   ];
 
-python-with-my-packages = pkgs.python2.withPackages my-python-packages;
+python-with-my-packages = pkgs.python3.withPackages my-python-packages;
 
 in
 
