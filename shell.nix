@@ -27,6 +27,11 @@ python3-with-my-packages = pkgs.python3.withPackages my-python-packages;
 # cmaes = haskellPackages.callPackage ./default.nix { python = python-with-my-packages; };
 cmaes = haskellPackages.callPackage ./default.nix { python = python3-with-my-packages; };
 
+haskellDeps = ps: with ps; [
+  base
+];
+
+ghc = haskellPackages.ghcWithPackages haskellDeps;
 
 in
 
@@ -35,6 +40,7 @@ pkgs.stdenv.mkDerivation {
   buildInputs = [
     haskellPackages.cabal-install
     cmaes
+    ghc
     # python-with-my-packages
     python3-with-my-packages
   ];
