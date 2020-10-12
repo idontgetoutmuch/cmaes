@@ -29,6 +29,8 @@ cmaes = haskellPackages.callPackage ./default.nix { python = python3-with-my-pac
 
 haskellDeps = ps: with ps; [
   base
+  mtl process safe strict syb
+  doctest QuickCheck random vector
 ];
 
 ghc = haskellPackages.ghcWithPackages haskellDeps;
@@ -39,7 +41,7 @@ pkgs.stdenv.mkDerivation {
   name = "shell";
   buildInputs = [
     haskellPackages.cabal-install
-    cmaes
+    # cmaes
     ghc
     # python-with-my-packages
     python3-with-my-packages
