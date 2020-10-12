@@ -270,8 +270,8 @@ wrapperFnFullPath = unsafePerformIO $ do
       pythonVersion = read $ take 1 $ atDef "2" (words str) 1
 
       correctShebang
-        | pythonVersion == 2 = "#!/usr/bin/env python"
-        | otherwise          = "#!/usr/bin/env python2"
+        | pythonVersion == 3 = "#!/usr/bin/env python"
+        | otherwise          = "#!/usr/bin/env python3"
 
   wrapperLines <- lines <$> Strict.readFile fullFn
 
@@ -290,7 +290,7 @@ wrapperFnFullPath = unsafePerformIO $ do
 -- | Execute the optimizer and get the solution.
 run :: forall tgt. Config tgt -> IO tgt
 run Config{..} = do
-  let pythonPath0 = maybe "python2" id pythonPath
+  let pythonPath0 = maybe "python3" id pythonPath
       wrapperPath0 = maybe wrapperFnFullPath id cmaesWrapperPath
 
   (Just hin, Just hout, _, hproc) <- createProcess (proc pythonPath0 [wrapperPath0])

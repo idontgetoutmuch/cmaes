@@ -23,7 +23,7 @@ opts['CMA_active'] = True
 opts['tolfun'] = 0
 
 # read initial guesses
-initxs = map(float, recvline().split())
+initxs = list(map(float, recvline().split()))
 # read the initial standard deviation
 sigma = float(recvline())
 
